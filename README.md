@@ -7,21 +7,31 @@ Codit class 개발시 부족했던 부분
 2. 오류처리
 3. validation
 
-위 3가지가 부족했음.. 전혀 하지 않은것은 아니지만 정상적인 개발과는 거리가 있었고 부족했던 부분이 분명 존재함
+### 목표
+
+> 부족한 부분을 채워 다음 프로젝트의 기반이 된다.
 
 
 
-> 부족한 부분을 채워 성장하기위한 프로젝트
+테스트 프레임워크 :  https://github.com/mochajs/mocha
+
+검증 라이브러리 : https://github.com/shouldjs/should.js
+
+통합테스트 : https://github.com/visionmedia/supertest
 
 
 
-https://github.com/mochajs/mocha
+# TDD 실천법과 도구" 책 전체를 PDF 공개
 
-https://github.com/shouldjs/should.js
+https://repo.yona.io/doortts/blog/issue/1
 
-https://github.com/visionmedia/supertest
 
-# TDD
+
+1. 실패하는 테스트 코드 작성하기.
+2. 테스트 통과시킬 함수 , API 작성
+3. 리팩토링
+
+
 
 바로 소스코드를 작성하는것이아니라 테스트코드를 작성하는것임~!!!!
 
@@ -54,65 +64,6 @@ describe("utils.js모듈의 captialize() 함수는", () => {
 });
 
 ```
-
-
-
-#### utils.spec.js
-
-
-
-## should 
-
-test코드에서는 assert말고 사용
-
-```js
-const utils = require("./utils");
-const should = require("should");
-// 테스트 수트 만들기 (테스트 환경)
-describe("utils.js모듈의 captialize() 함수는", () => {
-  // 테스트 케이스작성
-  it("문자열의 첫번째 문자를 대문자로 변환한다.", () => {
-    const result = utils.captialize("hello");
-    result.should.be.equal("Hello");
-  });
-});
-
-```
-
-
-
-
-
-## 슈퍼테스트
-
-Mocha : 함수를 테스트하는 단위테스트
-
-슈퍼테스트 : 통합테스트  API의 기능테스트 // 내부적으로 익스프레스 서버를 구동시켜 실제 요청을 보낸뒤 결과를 검증
-
-
-
-###### index.spec.js
-
-```js
-const app = require("./index");
-const request = require("supertest");
-
-describe("GET /users는", () => {
-  it("users func...", done => {
-    //done 이라는 콜백함수 대입
-    request(app)
-      .get("/users")
-      .end((err, res) => {
-        console.log(res.body);
-        done();
-      });
-  });
-});
-```
-
-
-
-
 
 
 
