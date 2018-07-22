@@ -1,7 +1,7 @@
 const should = require("should");
 const request = require("supertest");
 
-const app = require("./index");
+const app = require("../../index");
 
 /* GET /users는 ... 
 case success : 유저 객체를 담은 배열로 응답 & 최대 limit갯수만큼 응답..
