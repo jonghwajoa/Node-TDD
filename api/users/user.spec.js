@@ -1,7 +1,7 @@
 const should = require("should");
 const request = require("supertest");
-
 const app = require("../../index");
+const models = require("../../models");
 
 /* GET /users는 ... 
 case success : 유저 객체를 담은 배열로 응답 & 최대 limit갯수만큼 응답..
@@ -9,6 +9,11 @@ case fail : limit이 숫자가 아니면 400
 */
 describe("GET /users는..", () => {
   describe("성공시....", () => {
+    const users = [{ name: "alice" }, { name: "bek" }, { name: "chris" }];
+
+    before(() => models.sequelize.sync({ force: true }));
+    before(() => models.User.bulkCreate(users));
+
     it("유저객체를 담은 배열로 응답한다..", done => {
       request(app)
         .get("/users")
@@ -102,6 +107,10 @@ case success : 생성된 유저객체 반환 , 입력한 name을 반환 , 201상
 case fail : name 파라미터 누락시 400반환 , name중복시 409반환
 */
 describe("POST /users는 ...", () => {
+  const users = [{ name: "alice" }, { name: "bek" }, { name: "chris" }];
+  before(() => models.sequelize.sync({ force: true }));
+  before(() => models.User.bulkCreate(users));
+
   describe("성공시....", () => {
     let body;
     let name = "daniel";
@@ -136,7 +145,7 @@ describe("POST /users는 ...", () => {
     it("name 중복일 경우 409을 반환한다.", done => {
       request(app)
         .post("/users")
-        .send({ name: "hwa" })
+        .send({ name: "bek" })
         .expect(409)
         .end(done);
     });
@@ -152,9 +161,13 @@ case fail : 정수가 아닌 id경우 400 반환
 */
 
 describe("PUT /users/:id", () => {
+  const users = [{ name: "alice" }, { name: "bek" }, { name: "chris" }];
+  before(() => models.sequelize.sync({ force: true }));
+  before(() => models.User.bulkCreate(users));
+
   describe("성공시", () => {
-    const name = "den";
-    it("변경된 name을 응답한다.", done => {
+    it("변경된 name을 응답한다", done => {
+      const name = "chally";
       request(app)
         .put("/users/3")
         .send({ name })
@@ -164,31 +177,31 @@ describe("PUT /users/:id", () => {
         });
     });
   });
-  describe("실패시...", () => {
-    it("정수가 아닌 id일 경우 400응답", done => {
+  describe("실패시", () => {
+    it("정수가 아닌 id일 경우 400을 응답한다", done => {
       request(app)
         .put("/users/one")
         .expect(400)
         .end(done);
     });
-    it("name이 없는경우 400반환", done => {
+    it("name이 없을 경우 400을 응답한다", done => {
       request(app)
         .put("/users/1")
         .send({})
         .expect(400)
         .end(done);
     });
-    it("없는 id일경우 400을 응답", done => {
+    it("없는 유저일 경우 404을 응답한다", done => {
       request(app)
         .put("/users/999")
         .send({ name: "foo" })
         .expect(404)
         .end(done);
     });
-    it("name이 중복일경우 409응답", done => {
+    it("이름이 중복일 경우 409을 응답한다", done => {
       request(app)
-        .put("/users/2")
-        .send({ name: "hong" })
+        .put("/users/3")
+        .send({ name: "bek" })
         .expect(409)
         .end(done);
     });
